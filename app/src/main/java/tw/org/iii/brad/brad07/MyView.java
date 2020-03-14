@@ -1,5 +1,5 @@
 package tw.org.iii.brad.brad07;
-
+//試著寫打磚塊
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.Timer;
@@ -23,6 +25,7 @@ public class MyView extends View {
     private float ballW, ballH, ballX, ballY, dx, dy;
     private boolean isInit;
     private Timer timer;
+    private GestureDetector gd;
 
     public MyView(Context context) {
         super(context);
@@ -38,7 +41,66 @@ public class MyView extends View {
 
         timer = new Timer(); //與系統有關的可塞建構式
 
+        gd = new GestureDetector(new MyGDListener());//橫線表示現在可用但以後可能無法
+
 //        Log.v("brad", " ==> " + (context instanceof MainActivity)); //後面塞字串,故
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {  //所有觸摸事件的源頭
+//        Log.v("brad",event.getX() + " : " + event.getY());
+        //return super.onTouchEvent(event);     //原始code
+        //return gd.onTouchEvent(event);
+
+        float ex = event.getX(), ey = event.getY();
+        if (ex>=1350 && ex<=1750 && ey >=550 && ey <= 950){ //設定在畫面右下角的範圍內才能控制
+            if(event.getAction() == MotionEvent.ACTION_DOWN){
+
+            }else if(event.getAction() == MotionEvent.ACTION_MOVE){
+
+            }else if(event.getAction() == MotionEvent.ACTION_UP){
+
+            }
+            Log.v("brad",event.getX() + " : " + event.getY());
+        }
+        return true;
+    }
+
+    private class MyGDListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.v("brad","onFling()" + velocityX + " " + velocityY);
+
+            if(Math.abs(velocityX) > Math.abs(velocityY)){
+                //左右
+                if(velocityX > 100){
+                    // right
+                }
+                if(velocityX < -100){
+                    // left
+                }
+            }
+            if(Math.abs(velocityX) < Math.abs(velocityY)){
+                //上下
+                if(velocityY < -100){
+                    // up
+                }
+                if (velocityY > 100){
+                    // down
+                }
+
+            }
+
+            return super.onFling(e1, e2, velocityX, velocityY);
+
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.v("brad","onDown()");
+//            return super.onDown(e); //原始code,onTouch有否持續偵測試看此處的回傳
+            return true;    //改為true後才看得到onFling
+        }
     }
 
     private void init(){    //用此方法(搭配boolean)可以確保其中的code只做一次
